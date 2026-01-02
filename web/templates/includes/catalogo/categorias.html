@@ -1,0 +1,18 @@
+<div class="blog-sb-widget multishopcategories_widget">
+    <h3 class="widgettitle">Categorias</h3>
+
+    <div class="section-sb-current">
+        <ul class="section-sb-list">
+            {% for category in categorys %}
+            <li>
+                <a href="{% url 'web:productsByCategory' category.id %}">
+                    <span class="section-sb-label">{{category.name}}
+                        <span class="count">{{category.product_set.all.count}}</span>
+                    </span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</div>
