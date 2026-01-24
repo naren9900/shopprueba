@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Category, Product
+from . cart import Cart
 
 # Create your views here.
 
@@ -42,9 +43,44 @@ def productDetail(request, product_id):
     """ Vista para el detalle de producto"""
     #objProduct = Product.objects.get(pk=product_id)
     objProduct = get_object_or_404(Product, pk=product_id)
-
     context = {
         'product':objProduct,
     }
-
     return render(request,'producto.html', context)
+
+"""======================================================
+        VISTAS PARA EL CARRITO DE COMPRA
+======================================================"""
+
+def shoppingCart(request):
+    return render(request,'carrito.html')
+
+def addCart(request,product_id):
+    #agregar productos al carrito
+    if request.method == 'POST':
+        amount = int(request.POST['cantidad'])
+    else:
+        amount = 1
+
+    objProduct = Product.objects.get(pk=product_id)
+    cartProduct = Cart(request)
+    cartProduct.add(objProduct, amount)
+
+    print(request.session.get("cart"))
+
+    return render(request, 'carrito.html')
+
+def removeProductsCart (request, product_id):
+    objProduct = Product.objects.get(pk=product_id)
+    cartProduct = Cart(request)
+    cartProduct.delete(objProduct)
+    return render(request, 'carrito.html')
+
+def cleanCart(request):
+    cartProduct = Cart(request)
+    cartProduct.clear()
+
+    return render(request, 'carrito.html')
+
+def registerOrder(request):
+    return render(request,'carrito.html')
